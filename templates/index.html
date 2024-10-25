@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Commerce App</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>E-Commerce Order Management</h1>
+
+    <!-- Register Customer Form -->
+    <section>
+        <h2>Register New Customer</h2>
+        <form id="registerForm">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            <br>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            <br>
+            <label for="phone_number">Phone Number:</label>
+            <input type="text" id="phone_number" name="phone_number">
+            <br>
+            <button type="submit">Register Customer</button>
+        </form>
+        <div id="registerResult"></div>
+    </section>
+
+    <!-- Place Order Form -->
+    <section>
+        <h2>Place Order</h2>
+        <form id="orderForm">
+            <label for="customer_id">Customer ID:</label>
+            <input type="number" id="customer_id" name="customer_id" required>
+            <br>
+            <label>Order Items:</label>
+            <div id="orderItems">
+                <div class="order-item">
+                    <label for="product_id">Product ID:</label>
+                    <input type="number" class="product_id" required>
+                    <label for="quantity">Quantity:</label>
+                    <input type="number" class="quantity" min="1" required>
+                </div>
+            </div>
+            <button type="button" onclick="addOrderItem()">Add Another Item</button>
+            <br><br>
+            <button type="submit">Place Order</button>
+        </form>
+        <div id="orderResult"></div>
+    </section>
+
+    <!-- Update Order Status Form -->
+    <section>
+        <h2>Update Order Status</h2>
+        <form id="updateStatusForm">
+            <label for="order_id">Order ID:</label>
+            <input type="number" id="order_id" name="order_id" required>
+            <br>
+            <label for="status">Status:</label>
+            <select id="status" name="status">
+                <option value="pending">Pending</option>
+                <option value="shipped">Shipped</option>
+                <option value="delivered">Delivered</option>
+                <option value="canceled">Canceled</option>
+            </select>
+            <br>
+            <button type="submit">Update Status</button>
+        </form>
+        <div id="statusResult"></div>
+    </section>
+
+    <script src="app.js"></script>
+</body>
+</html>
