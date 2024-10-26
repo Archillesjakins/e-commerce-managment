@@ -3,11 +3,12 @@ from flask_sqlalchemy import SQLAlchemy
 import pymysql
 from dotenv import load_dotenv
 import os
+from flask_cors import CORS
 
 load_dotenv()
 
 app = Flask(__name__)
-
+CORS(app)
 
 # Database configuration
 app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{os.getenv("username")}:{os.getenv("password")}@localhost/ecommerce'
@@ -47,7 +48,6 @@ class OrderItem(db.Model):
     quantity = db.Column(db.Integer, nullable=False)
     unit_price = db.Column(db.Numeric(10, 2), nullable=False)
     total_price = db.Column(db.Numeric(10, 2), nullable=False)
-
     order = db.relationship("Order", backref="order_items")
     product = db.relationship("Product")
 
@@ -112,20 +112,8 @@ def place_order():
         product.stock -= quantity
         db.session.add(OrderItem(order_id=new_order.order_id, product_id=product_id, quantity=quantity, unit_price=unit_price, total_price=final_price))
 
-    new_order.total_amount = total_amount
     db.session.commit()
     return jsonify({"message": f"Order placed successfully for Customer {customer_id}", "total_amount": f"${total_amount:.2f}"}), 201
-
-# Generator function to stream order history
-@app.route('/order_history/<int:customer_id>')
-def order_history(customer_id):
-    def generate():
-        orders = Order.query.filter_by(customer_id=customer_id).all()
-        for order in orders:
-            yield f"Order ID: {order.order_id}, Date: {order.order_date}, Status: {order.status}\n"
-            for item in order.order_items:
-                yield f"  - Product: {item.product.name}, Quantity: {item.quantity}, Total Price: ${item.total_price}\n"
-    return app.response_class(generate(), mimetype='text/plain')
 
 # Update Order Status
 @app.route('/update_order_status', methods=['PATCH'])
